@@ -7,5 +7,4 @@ Brief challenge to measure API and pipeline deployment as a Machine Learning Eng
 
 ### API Dev
 Documentation is available at local host implementation on http://127.0.0.1:8000/docs
-
 ![kueski](img/logo.png)
