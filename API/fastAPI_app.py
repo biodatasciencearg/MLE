@@ -1,11 +1,14 @@
 import uvicorn
 import requests
 import json
-from fastapi import FastAPI
 import time
 import sqlite3
 import pandas as pd
-
+from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from databases import Database
+from predictor import MyKueskiModel
+from starlette.responses import RedirectResponse
 
 # defino la url donde estara la api.
 url =  "http://127.0.0.1:8000"
@@ -53,52 +56,64 @@ app = FastAPI(title="Kueski CreditRisk",
         "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
     },openapi_tags=tags_metadata)
 
-from predictor import MyKueskiModel
 
 # Read/loads model in memory. Waiting requets.
 model = MyKueskiModel()
 
-# Endopoint credit risk.
-@app.get("/credit_risk/client_id={id}",tags=["credit_risk"])
-def home(id: int):
-    # consulta a base de datos para ver si existe el client_id con respecto a si tiene o no features.
-    # control sobre timeouts posible caida en servicio de feature store.
-    response = requests.get(url+f"/online_feature_store/client_id={id}")
-    # get features as datafame to make predictions.
-    response_dict = response.json()
-    # From all information on json keep columns to feed model predictions.
-    input_model = pd.DataFrame(response_dict,index=[0])[["age","years_on_the_job","nb_previous_loans","avg_amount_loans_previous","flag_own_car"]]
-    print(input_model)
-    # TODO chequear imputacion de columnas y enviarlas a la salida del json.
-    label, proba = model.predict(input_model)
-    # consulta a base de datos para ver si existe el client_id con respecto a si tiene o no features.
-    return {"client_id": id,"label":int(label), "score":proba, "input_variables":response_dict}
+
+database = Database("sqlite:///feature_store_online.db")
+
+@app.on_event("startup")
+async def database_connect():
+    await database.connect()
 
 
+@app.on_event("shutdown")
+async def database_disconnect():
+    await database.disconnect()
 
+# endpoint feature store.
 @app.get("/online_feature_store/client_id={id}",tags=['online_feature_store'])
-def home(id: int):
-    # creo la conexion.
+async def fetch_data(id: int):
     #TODO chequear la calidad de los datos.
     #TODO chequear que el usuario exista.
     #TODO imprimir headers attacks. Origen requests. Poner idealmente tokens.
-    cnx = sqlite3.connect('feature_store_online.db')
+    # query to get selected features.
     query = f"""SELECT   age
                 , years_on_the_job
                 , nb_previous_loans
                 , avg_amount_loans_previous
                 , flag_own_car
                 FROM features_table where id = {id}"""
-    features = pd.read_sql_query(query, cnx)
-    # Lo mando a un diccionario.
-    features = features.iloc[0].to_dict()
-    # Agrego el id
-    features['id'] = id
-    # cierro la conexion.
-    cnx.close()
-    # devuelvo el json con las features y el id.
-    return features
-  
+    # Espero el resultado de la base de datos.
+    #TODO add timeout  exception.
+    results = await database.fetch_all(query=query)
+    # check if query is empty.
+    if len(results) < 1:
+        raise HTTPException(status_code=404, detail="User not found")
+    # Otherwise:
+    return  results[0]
+# Endopoint credit risk.
+@app.get("/credit_risk/client_id={id}",tags=["credit_risk"])
+def home(id: int):
+    # query to api for features.
+    response = requests.get(url+f"/online_feature_store/client_id={id}")
+    # consulta a base de datos para ver si existe el client_id con respecto a si tiene o no features.
+    if response.status_code == 200:
+        # get features as datafame to make predictions.
+        response_dict = response.json()
+        # From all information on json keep columns to feed model predictions.
+        input_model = pd.DataFrame(response_dict,index=[0])[["age","years_on_the_job","nb_previous_loans","avg_amount_loans_previous","flag_own_car"]]
+        print(input_model)
+        # TODO chequear imputacion de columnas y enviarlas a la salida del json.
+        label, proba = model.predict(input_model)
+        return {"client_id": id,"label":int(label), "score":proba, "input_variables":response_dict}
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
+
+@app.get("/")
+async def docs_redirect():
+    return RedirectResponse(url='/docs')
 
 if __name__ == "__main__":
     uvicorn.run("fastAPI_app:app")
