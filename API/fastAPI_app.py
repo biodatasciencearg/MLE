@@ -72,7 +72,7 @@ def home(id: int):
     # TODO chequear imputacion de columnas y enviarlas a la salida del json.
     label, proba = model.predict(input_model)
     # consulta a base de datos para ver si existe el client_id con respecto a si tiene o no features.
-    return {"client_id": id,"label":int(label), "predict_proba":float(proba)}
+    return {"client_id": id,"label":int(label), "score":proba, "input_variables":response_dict}
 
 
 
