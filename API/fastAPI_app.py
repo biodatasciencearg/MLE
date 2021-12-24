@@ -61,38 +61,43 @@ model = MyKueskiModel()
 # Endopoint credit risk.
 @app.get("/credit_risk/client_id={id}",tags=["credit_risk"])
 def home(id: int):
-  # consulta a base de datos para ver si existe el client_id con respecto a si tiene o no features.
-  # control sobre timeouts posible caida en servicio de feature store.
-  response = requests.get(url+f"/online_feature_store/client_id={id}")
-  print(response.json())
-  print(type(response.json()))
-  features = pd.DataFrame(response.json(),index=[0]).drop(columns='id')
-  label, proba = model.predict(features)
-  # consulta a base de datos para ver si existe el client_id con respecto a si tiene o no features.
-  return {"client_id": id,"label":label, "predict_proba":proba}
+    # consulta a base de datos para ver si existe el client_id con respecto a si tiene o no features.
+    # control sobre timeouts posible caida en servicio de feature store.
+    response = requests.get(url+f"/online_feature_store/client_id={id}")
+    # get features as datafame to make predictions.
+    response_dict = response.json()
+    # From all information on json keep columns to feed model predictions.
+    input_model = pd.DataFrame(response_dict,index=[0])[["age","years_on_the_job","nb_previous_loans","avg_amount_loans_previous","flag_own_car"]]
+    print(input_model)
+    # TODO chequear imputacion de columnas y enviarlas a la salida del json.
+    label, proba = model.predict(input_model)
+    # consulta a base de datos para ver si existe el client_id con respecto a si tiene o no features.
+    return {"client_id": id,"label":int(label), "predict_proba":float(proba)}
 
 
 
 @app.get("/online_feature_store/client_id={id}",tags=['online_feature_store'])
 def home(id: int):
-  # creo la conexion.
-  cnx = sqlite3.connect('feature_store_online.db')
-  id = 5008805
-  query = f"""SELECT   age
-                   , years_on_the_job
-                   , nb_previous_loans
-                   , avg_amount_loans_previous
-                   , flag_own_car
-            FROM features_table where id = {id}"""
-  features = pd.read_sql_query(query, cnx)
-  # Lo mando a un diccionario.
-  features = features.iloc[0].to_dict()
-  # Agrego el id
-  features['id'] = id
-  # cierro la conexion.
-  cnx.close()
-  # devuelvo el json con las features y el id.
-  return features
+    # creo la conexion.
+    #TODO chequear la calidad de los datos.
+    #TODO chequear que el usuario exista.
+    #TODO imprimir headers attacks. Origen requests. Poner idealmente tokens.
+    cnx = sqlite3.connect('feature_store_online.db')
+    query = f"""SELECT   age
+                , years_on_the_job
+                , nb_previous_loans
+                , avg_amount_loans_previous
+                , flag_own_car
+                FROM features_table where id = {id}"""
+    features = pd.read_sql_query(query, cnx)
+    # Lo mando a un diccionario.
+    features = features.iloc[0].to_dict()
+    # Agrego el id
+    features['id'] = id
+    # cierro la conexion.
+    cnx.close()
+    # devuelvo el json con las features y el id.
+    return features
   
 
 if __name__ == "__main__":

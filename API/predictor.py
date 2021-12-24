@@ -10,4 +10,4 @@ class MyKueskiModel():
             self.model = load(handle)
         
     def predict(self,array):
-        return (self.model.predict(array),self.model.predict_proba(array))
+        return (self.model.predict(array)[0],self.model.predict_proba(array)[0][1])
