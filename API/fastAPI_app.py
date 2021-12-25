@@ -104,7 +104,6 @@ def home(id: int):
         response_dict = response.json()
         # From all information on json keep columns to feed model predictions.
         input_model = pd.DataFrame(response_dict,index=[0])[["age","years_on_the_job","nb_previous_loans","avg_amount_loans_previous","flag_own_car"]]
-        print(input_model)
         # TODO chequear imputacion de columnas y enviarlas a la salida del json.
         label, proba = model.predict(input_model)
         return {"client_id": id,"label":int(label), "score":proba, "input_variables":response_dict}
