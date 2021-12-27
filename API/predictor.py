@@ -1,11 +1,13 @@
 from joblib import load
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
+import os 
+model_path = os.environ['KUESKI_MODEL_PATH']
 
 class MyKueskiModel():
     def __init__(self):
         """instantiate model into memory. Waiting requests..."""
-        with open('model_risk.joblib', 'rb') as handle:
+        with open(model_path, 'rb') as handle:
             self.model = load(handle)
     # TODO add 
     def predict(self,array):

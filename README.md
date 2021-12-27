@@ -11,6 +11,13 @@ Brief challenge to measure API and pipeline deployment as a Machine Learning Eng
         were followed for the implementation of the API.
 
 ### API Dev
+before start you need to configure environ variable.I prefer not to hardcode url or path to databases or last models.Example over linux server.
+Maybe in a real scenario you can set de environment variables using a parameters stores (AWS SSM) programmatically.
+export KUESKI_FEATURE_STORE_API_URL="http://localhost:8000"
+export KUESKI_FEATURE_STORE_PATH="sqlite:///feature_store_online.db"
+export KUESKI_MODEL_PATH="./model_risk.joblib"
+
+
 Among the functional requirements is the creation/development of two APIs.
 * (1) creating an API to serve  features for each client
 * (2) creating a prediction service that uses the created features.
