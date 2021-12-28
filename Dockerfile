@@ -1,21 +1,13 @@
-FROM python:3.8
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
 
-COPY ./API/requirements.txt ./api/api/requirements.txt 
+COPY ./API/requirements.txt ./app/requirements.txt
 
-RUN pip install --no-cache-dir --upgrade -r api/api/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r app/requirements.txt
 
-
-COPY ./API /api/api
-
-ENV PYTHONPATH=/api
-WORKDIR /api
+COPY ./API /app
+WORKDIR /app
 
 EXPOSE 8000
-
-ENV  KUESKI_FEATURE_STORE_API_URL="http://localhost:8000"
+ENV  KUESKI_FEATURE_STORE_API_URL="http://localhost"
 ENV KUESKI_FEATURE_STORE_PATH="sqlite:///feature_store_online.db"
-ENV KUESKI_MODEL_PATH="./api/model_risk.joblib"
-
-#ENTRYPOINT ["uvicorn"]
-#CMD ["api.main:app","--proxy-headers", "--host", "127.0.0.1", "--port", "8000"]
-CMD ["python", "./api/main.py"]
+ENV KUESKI_MODEL_PATH="./model_risk.joblib"
