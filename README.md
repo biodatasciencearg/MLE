@@ -129,10 +129,16 @@ The important aspects to pointing out could be:
 
 ## Final remarks:
 
+#### API
+In a real-world scenario ( and with a considerable more amount of time) the deployment for APIs alternate (volume dependency) between fastAPI with lambda functions behind an api gateway with load balancers (scalable solutions) or an EC2 with a docker image of the APIs the actual technical specification includes just the development of a local API. Other stuffs to be considered as security/governance:
+*  Create users and tokens to consume the API services. 
 
-In a real-world scenario ( and with a considerable more amount of time) the deployment for APIs alternate (volume dependency) between fastAPI with lambda functions behind an api gateway with load balancers (scalable solutions) or an EC2 with a docker image of the APIs the actual technical specification includes just the development of a local API
+*  Library to encrypt data (sensible data for clients)
 
+*  Write headers and records for any API call to identify consume patters or DNS attacks.
+
+#### FE
 For the feature engineering process. We will choose between SQL and NoSQL databases to create the feature store. Also, I will create a backtesting step to control the degradation of the models with an SNS step when the models drop from pre-established thresholds. Also, work about the standardization of sklearn transformers and/or include Pandera with Fouge in the pyspark preprocessing steps. The QA over features needs a to be improved and make better handling during first step of feature enginnering process. I'd like to be more time to developed the re-train process (**"CRTrainingJob"** Figure state machine) just I could only develop  the notebooks with transformers. 
 
-
+#### CI/CD
 **IMPORTANT** repository implementation (pipeline / aiml-workloads_toy) is only possible if you have all configuration in aws (glue, lambda, step functions policy, permissions, etc.). In my account, I implemented all artifacts/resources. I am sending you only for a demonstration purpose that I have been capable of. To finish I need to develop the final step of a CI/CD, using cdk pipeline to define account (prod/dev) unitary test, etc.
