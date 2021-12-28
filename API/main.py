@@ -1,17 +1,55 @@
 import uvicorn
 import requests
 import json
+import time
+import sqlite3
 import pandas as pd
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from databases import Database
-#from predictor import MyKueskiModel
 from starlette.responses import RedirectResponse
-import os
-
+from sklearn.pipeline import Pipeline
+import pandera as pa
 from joblib import load
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
+from sklearn.base import BaseEstimator, TransformerMixin
+from imblearn.pipeline import Pipeline as imbpipeline
+import os 
+
+# Custom transformer 
+# Define custom transformers. Column selector.
+class FeatureSelector(BaseEstimator, TransformerMixin):
+    def __init__(self, columns):
+        self.columns = columns
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X, y=None):
+        return X[self.columns]
+
+class CheckFeature(TransformerMixin):
+    # TODO read from a repository of schemas.
+    def __init__(self, schema):
+
+        self.schema = schema
+        self.failure_cases = None
+
+    def fit(self, X, y=None):
+        return self
+    
+    def transform(self, X):
+        try:
+            df = self.schema.validate(X, lazy=True)
+            
+        except pa.errors.SchemaErrors as err:
+            
+            print("Schema errors and failure cases:")
+            print(err.failure_cases)
+            self.failure_cases = err.failure_cases
+        return X
+
 
 # Model path from enviroment variable
 model_path = os.environ['KUESKI_MODEL_PATH']
@@ -21,7 +59,7 @@ url           =  os.environ['KUESKI_FEATURE_STORE_API_URL']
 database_path =  os.environ['KUESKI_FEATURE_STORE_PATH']
 
 class MyKueskiModel():
-    def __init__(self):
+    def __init__(self,model_path):
         """instantiate model into memory. Waiting requests..."""
         with open(model_path, 'rb') as handle:
             self.model = load(handle)
@@ -37,6 +75,19 @@ class MyKueskiModel():
         # compute score 0-1000. 
         score = int(self.model.predict_proba(array)[0][1]*1000)
         return (label,score)
+
+
+# Pandera schema definition 
+cr_schema = pa.DataFrameSchema(
+        {
+            "age"                      : pa.Column(float,    checks=[pa.Check.greater_than(min_value=0) ,pa.Check.less_than_or_equal_to(max_value=100.0)]),
+            "years_on_the_job"         : pa.Column(float,    checks=[pa.Check.greater_than_or_equal_to(min_value=0) ,pa.Check.less_than_or_equal_to(max_value=100.0)]),
+            "nb_previous_loans"        : pa.Column(float,    checks=[pa.Check.greater_than_or_equal_to(min_value=0)]),
+            "avg_amount_loans_previous": pa.Column(float,   checks=[pa.Check.greater_than_or_equal_to(min_value=0)]),
+            "flag_own_car"             : pa.Column(int,     checks=[pa.Check.isin([1, 0])])
+        },
+        )
+my_cols = ['age', 'years_on_the_job','nb_previous_loans','avg_amount_loans_previous','flag_own_car']
 
 description = """
 KueskiCreditRisk API helps you evaluate clients. Computing Default probability or getting features/descriptors. 🚀
@@ -83,9 +134,9 @@ app = FastAPI(title="Kueski CreditRisk",
 
 
 # Read/loads model in memory. Waiting requets.
-model = MyKueskiModel()
+model = MyKueskiModel(model_path)
 
-# defining path to database
+# Read Database
 database = Database(database_path)
 
 @app.on_event("startup")
@@ -127,11 +178,26 @@ def home(id: int):
     if response.status_code == 200:
         # get features as datafame to make predictions.
         response_dict = response.json()
+        failure_cases = None
         # From all information on json keep columns to feed model predictions.
         input_model = pd.DataFrame(response_dict,index=[0])[["age","years_on_the_job","nb_previous_loans","avg_amount_loans_previous","flag_own_car"]]
         # TODO chequear imputacion de columnas y enviarlas a la salida del json.
+        # Paso todo a float.
+        for c in ['nb_previous_loans','age','years_on_the_job','avg_amount_loans_previous']:
+            input_model[c] = pd.to_numeric(input_model[c], downcast="float",errors='coerce').astype('float64')
         label, proba = model.predict(input_model)
-        return {"client_id": id,"label":int(label), "score":proba, "input_variables":response_dict}
+        # Do QA over features.
+        QApipe = Pipeline([("selector", FeatureSelector(columns=my_cols)), ("QA", CheckFeature(cr_schema))])
+        QApipe.fit_transform(input_model,None)
+        # save qa atribute.
+        failure_cases = QApipe['QA'].failure_cases
+        print("que hay aca",failure_cases)
+        if failure_cases is None:
+            failure_cases = None
+        else:
+            failure_cases = failure_cases['column'].drop_duplicates().values.tolist()
+        return {"client_id": id,"label":int(label), "score":proba, "input_variables":response_dict\
+                ,"qa_failure_cases":failure_cases}
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
