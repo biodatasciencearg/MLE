@@ -142,3 +142,6 @@ For the feature engineering process. We will choose between SQL and NoSQL databa
 
 #### CI/CD
 **IMPORTANT** repository implementation (pipeline / aiml-workloads_toy) is only possible if you have all configuration in aws (glue, lambda, step functions policy, permissions, etc.). In my account, I implemented all artifacts/resources. I am sending you only for a demonstration purpose that I have been capable of. To finish I need to develop the final step of a CI/CD, using cdk pipeline to define account (prod/dev) unitary test, etc.
+
+
+<div><img src="./img/cdk_resource_print.png" width="1000px" align="left"></div>
