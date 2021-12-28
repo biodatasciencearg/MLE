@@ -1,0 +1,385 @@
+{
+  "Resources": {
+    "AIMLtoyWorkloadsMiscDaysOW": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "365",
+        "Description": "numero de dias que desde el processing job se setea como la ventana de observacion",
+        "Name": "/AIMLtoy/Workloads/Misc/DaysOW"
+      },
+      "Metadata": {
+        "aws:cdk:path": "aimltoy-devCRFE/--AIMLtoy--Workloads--Misc--DaysOW"
+      }
+    },
+    "AIMLtoyWorkloadsMiscDestinationPath": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "s3://arcosmtk-working-directory/credits_scoring_test/offline_serving/",
+        "Description": "path s3 de parque donde guardo los resultdos",
+        "Name": "/AIMLtoy/Workloads/Misc/DestinationPath"
+      },
+      "Metadata": {
+        "aws:cdk:path": "aimltoy-devCRFE/--AIMLtoy--Workloads--Misc--DestinationPath"
+      }
+    },
+    "AIMLtoyWorkloadsMiscSourcePath": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "s3://arcosmtk-working-directory/credits_scoring_test/dataset_credit_risk.csv.gz",
+        "Description": "path s3 donde guardare el csv",
+        "Name": "/AIMLtoy/Workloads/Misc/SourcePath"
+      },
+      "Metadata": {
+        "aws:cdk:path": "aimltoy-devCRFE/--AIMLtoy--Workloads--Misc--SourcePath"
+      }
+    },
+    "aimltoydevCRFEJobsstep01fe": {
+      "Type": "AWS::Glue::Job",
+      "Properties": {
+        "Command": {
+          "Name": "glueetl",
+          "PythonVersion": "3",
+          "ScriptLocation": "s3://aiml-dev-segments-849495627007/artifacts/code/Jobs/step_01_fe/main.py"
+        },
+        "Role": "arn:aws:iam::849495627007:role/iam_glue_jobs_role",
+        "DefaultArguments": {
+          "--additional-python-modules": "dateutil==2.8.1"
+        },
+        "Description": "No description",
+        "ExecutionProperty": {
+          "MaxConcurrentRuns": 25
+        },
+        "GlueVersion": "2.0",
+        "MaxRetries": 0,
+        "Name": "aimltoy-devCRFE_Jobs_step_01_fe",
+        "NumberOfWorkers": 5,
+        "Timeout": 2880,
+        "WorkerType": "G.2X"
+      },
+      "Metadata": {
+        "aws:cdk:path": "aimltoy-devCRFE/aimltoy-devCRFE_Jobs_step_01_fe"
+      }
+    },
+    "aimltoydevCRFEJobsstep03tj": {
+      "Type": "AWS::Glue::Job",
+      "Properties": {
+        "Command": {
+          "Name": "pythonshell",
+          "PythonVersion": "3",
+          "ScriptLocation": "s3://aiml-dev-segments-849495627007/artifacts/code/Jobs/step_03_tj/main.py"
+        },
+        "Role": "arn:aws:iam::849495627007:role/iam_glue_jobs_role",
+        "DefaultArguments": {},
+        "Description": "No description",
+        "ExecutionProperty": {
+          "MaxConcurrentRuns": 25
+        },
+        "MaxCapacity": 1,
+        "MaxRetries": 0,
+        "Name": "aimltoy-devCRFE_Jobs_step_03_tj",
+        "Timeout": 2880
+      },
+      "Metadata": {
+        "aws:cdk:path": "aimltoy-devCRFE/aimltoy-devCRFE_Jobs_step_03_tj"
+      }
+    },
+    "aimltoydevCRFEStateMachine": {
+      "Type": "AWS::StepFunctions::StateMachine",
+      "Properties": {
+        "RoleArn": "arn:aws:iam::849495627007:role/iam_workflow_arcos_aiml_segments",
+        "DefinitionString": "{\"Comment\": \"Step Functions to trigger FE workflow\", \"StartAt\": \"CreditRiskFE\", \"States\": {\"CreditRiskFE\": {\"Type\": \"Task\", \"Resource\": \"arn:aws:states:::glue:startJobRun.sync\", \"Parameters\": {\"JobName\": \"aimltoy-devCRFE_Jobs_step_01_fe\", \"Arguments.$\": \"$.CreditRiskFE.Arguments\"}, \"ResultPath\": \"$.CreditRiskFE.output\", \"Catch\": [{\"ErrorEquals\": [\"States.ALL\"], \"ResultPath\": \"$.Error\", \"Next\": \"SNSFail\"}], \"Next\": \"Backtesting\"}, \"Backtesting\": {\"Type\": \"Choice\", \"Choices\": [{\"Variable\": \"$.InputData.vRun\", \"StringEquals\": \"OK\", \"Next\": \"Done\"}, {\"Variable\": \"$.InputData.vRun\", \"NumericEquals\": 0, \"Next\": \"SNSFail\"}, {\"Variable\": \"$.InputData.vRun\", \"StringEquals\": \"NOTOK\", \"Next\": \"CRtrainingJob\"}]}, \"CRtrainingJob\": {\"Type\": \"Task\", \"Resource\": \"arn:aws:states:::glue:startJobRun.sync\", \"Parameters\": {\"JobName\": \"aimltoy-devCRFE_Jobs_step_03_tj\", \"Arguments.$\": \"$.CreditRiskFE.Arguments\"}, \"ResultPath\": \"$.CreditRiskFE.output\", \"Catch\": [{\"ErrorEquals\": [\"States.ALL\"], \"ResultPath\": \"$.Error\", \"Next\": \"SNSFail\"}], \"Next\": \"Done\"}, \"SNSFail\": {\"Type\": \"Task\", \"Resource\": \"arn:aws:states:::sns:publish\", \"InputPath\": \"$\", \"Parameters\": {\"TopicArn\": \"arn:aws:sns:us-east-1:849495627007:aiml_segments_notification\", \"Subject\": \"Error: Abandoned Coupon\", \"Message\": \"Error: TEST\"}, \"Next\": \"Fail\"}, \"Fail\": {\"Type\": \"Fail\"}, \"Done\": {\"Type\": \"Succeed\"}}}",
+        "StateMachineName": "aimltoy-devCRFE_StateMachine_",
+        "StateMachineType": "STANDARD"
+      },
+      "Metadata": {
+        "aws:cdk:path": "aimltoy-devCRFE/aimltoy-devCRFE_StateMachine_"
+      }
+    },
+    "aimltoydevCRFELambdalambdarouting74A9569F": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6S3Bucket949DFB79"
+          },
+          "S3Key": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Fn::Select": [
+                    0,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6S3VersionKeyEFB94312"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Fn::Select": [
+                    1,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6S3VersionKeyEFB94312"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        },
+        "Role": "arn:aws:iam::849495627007:role/iam_lambda_aiml_role",
+        "Environment": {
+          "Variables": {
+            "KMS_KEY_ID": "36f1041a-656a-4df4-954a-49b6a39e4b54",
+            "STATE_MACHINE": {
+              "Fn::GetAtt": [
+                "aimltoydevCRFEStateMachine",
+                "Arn"
+              ]
+            }
+          }
+        },
+        "FunctionName": "aimltoy-devCRFE_Lambda_lambda_routing",
+        "Handler": "lambda_function.handler",
+        "MemorySize": 128,
+        "Runtime": "python3.8",
+        "Timeout": 600
+      },
+      "Metadata": {
+        "aws:cdk:path": "aimltoy-devCRFE/aimltoy-devCRFE_Lambda_lambda_routing/Resource",
+        "aws:asset:path": "asset.a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6",
+        "aws:asset:property": "Code"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAAA1WPzQqDMBCEn8X7GhUPvbYIPRQKYp8gxlVTNSnZDaWI796kf9DTzg4fs7OFKPJC5Mle3ilV3ZStyjoU64WlmqBBst4phAMRcvAGbQaorCF2XjFUvamlkwsyurj8+KAD1WnW1mwQs1eiRfzxw+wxOifbAjHeem9U5Cma4RbjWapRG4RZLm0nxXr8EDH+qzegMpWxHolXy22D+sGjNVkpduG75Epap84b1guK5j2fE4tDPfcAAAA="
+      },
+      "Metadata": {
+        "aws:cdk:path": "aimltoy-devCRFE/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Parameters": {
+    "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6S3Bucket949DFB79": {
+      "Type": "String",
+      "Description": "S3 bucket for asset \"a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6\""
+    },
+    "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6S3VersionKeyEFB94312": {
+      "Type": "String",
+      "Description": "S3 key for asset version \"a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6\""
+    },
+    "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6ArtifactHash9C8370EF": {
+      "Type": "String",
+      "Description": "Artifact hash for asset \"a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6\""
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "af-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

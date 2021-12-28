@@ -1,0 +1,5 @@
+{
+  "schedule_expression": "cron(0 8 ? * MON *)",
+  "state": "ENABLED",
+  "description":"Rule to trigger segments state machine"
+}

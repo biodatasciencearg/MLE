@@ -1,0 +1,5 @@
+{
+  "schedule_expression": "cron(0 12 * * ? *)",
+  "state": "ENABLED",
+  "description":"Rule to trigger recommendation state machine"
+}

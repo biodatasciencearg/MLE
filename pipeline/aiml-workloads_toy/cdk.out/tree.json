@@ -1,0 +1,341 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Construct",
+          "version": "1.101.0"
+        }
+      },
+      "aimltoy-devCRFE": {
+        "id": "aimltoy-devCRFE",
+        "path": "aimltoy-devCRFE",
+        "children": {
+          "--AIMLtoy--Workloads--Misc--DaysOW": {
+            "id": "--AIMLtoy--Workloads--Misc--DaysOW",
+            "path": "aimltoy-devCRFE/--AIMLtoy--Workloads--Misc--DaysOW",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+              "aws:cdk:cloudformation:props": {
+                "type": "String",
+                "value": "365",
+                "description": "numero de dias que desde el processing job se setea como la ventana de observacion",
+                "name": "/AIMLtoy/Workloads/Misc/DaysOW"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-ssm.CfnParameter",
+              "version": "1.101.0"
+            }
+          },
+          "--AIMLtoy--Workloads--Misc--DestinationPath": {
+            "id": "--AIMLtoy--Workloads--Misc--DestinationPath",
+            "path": "aimltoy-devCRFE/--AIMLtoy--Workloads--Misc--DestinationPath",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+              "aws:cdk:cloudformation:props": {
+                "type": "String",
+                "value": "s3://arcosmtk-working-directory/credits_scoring_test/offline_serving/",
+                "description": "path s3 de parque donde guardo los resultdos",
+                "name": "/AIMLtoy/Workloads/Misc/DestinationPath"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-ssm.CfnParameter",
+              "version": "1.101.0"
+            }
+          },
+          "--AIMLtoy--Workloads--Misc--SourcePath": {
+            "id": "--AIMLtoy--Workloads--Misc--SourcePath",
+            "path": "aimltoy-devCRFE/--AIMLtoy--Workloads--Misc--SourcePath",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+              "aws:cdk:cloudformation:props": {
+                "type": "String",
+                "value": "s3://arcosmtk-working-directory/credits_scoring_test/dataset_credit_risk.csv.gz",
+                "description": "path s3 donde guardare el csv",
+                "name": "/AIMLtoy/Workloads/Misc/SourcePath"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-ssm.CfnParameter",
+              "version": "1.101.0"
+            }
+          },
+          "aimltoy-devCRFE_Jobs_step_01_fe": {
+            "id": "aimltoy-devCRFE_Jobs_step_01_fe",
+            "path": "aimltoy-devCRFE/aimltoy-devCRFE_Jobs_step_01_fe",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::Glue::Job",
+              "aws:cdk:cloudformation:props": {
+                "command": {
+                  "name": "glueetl",
+                  "pythonVersion": "3",
+                  "scriptLocation": "s3://aiml-dev-segments-849495627007/artifacts/code/Jobs/step_01_fe/main.py"
+                },
+                "role": "arn:aws:iam::849495627007:role/iam_glue_jobs_role",
+                "defaultArguments": {
+                  "--additional-python-modules": "dateutil==2.8.1"
+                },
+                "description": "No description",
+                "executionProperty": {
+                  "maxConcurrentRuns": 25
+                },
+                "glueVersion": "2.0",
+                "maxRetries": 0,
+                "name": "aimltoy-devCRFE_Jobs_step_01_fe",
+                "numberOfWorkers": 5,
+                "timeout": 2880,
+                "workerType": "G.2X"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-glue.CfnJob",
+              "version": "1.101.0"
+            }
+          },
+          "aimltoy-devCRFE_Jobs_step_03_tj": {
+            "id": "aimltoy-devCRFE_Jobs_step_03_tj",
+            "path": "aimltoy-devCRFE/aimltoy-devCRFE_Jobs_step_03_tj",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::Glue::Job",
+              "aws:cdk:cloudformation:props": {
+                "command": {
+                  "name": "pythonshell",
+                  "pythonVersion": "3",
+                  "scriptLocation": "s3://aiml-dev-segments-849495627007/artifacts/code/Jobs/step_03_tj/main.py"
+                },
+                "role": "arn:aws:iam::849495627007:role/iam_glue_jobs_role",
+                "defaultArguments": {},
+                "description": "No description",
+                "executionProperty": {
+                  "maxConcurrentRuns": 25
+                },
+                "maxCapacity": 1,
+                "maxRetries": 0,
+                "name": "aimltoy-devCRFE_Jobs_step_03_tj",
+                "timeout": 2880
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-glue.CfnJob",
+              "version": "1.101.0"
+            }
+          },
+          "aimltoy-devCRFE_StateMachine_": {
+            "id": "aimltoy-devCRFE_StateMachine_",
+            "path": "aimltoy-devCRFE/aimltoy-devCRFE_StateMachine_",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::StepFunctions::StateMachine",
+              "aws:cdk:cloudformation:props": {
+                "roleArn": "arn:aws:iam::849495627007:role/iam_workflow_arcos_aiml_segments",
+                "definitionString": "{\"Comment\": \"Step Functions to trigger FE workflow\", \"StartAt\": \"CreditRiskFE\", \"States\": {\"CreditRiskFE\": {\"Type\": \"Task\", \"Resource\": \"arn:aws:states:::glue:startJobRun.sync\", \"Parameters\": {\"JobName\": \"aimltoy-devCRFE_Jobs_step_01_fe\", \"Arguments.$\": \"$.CreditRiskFE.Arguments\"}, \"ResultPath\": \"$.CreditRiskFE.output\", \"Catch\": [{\"ErrorEquals\": [\"States.ALL\"], \"ResultPath\": \"$.Error\", \"Next\": \"SNSFail\"}], \"Next\": \"Backtesting\"}, \"Backtesting\": {\"Type\": \"Choice\", \"Choices\": [{\"Variable\": \"$.InputData.vRun\", \"StringEquals\": \"OK\", \"Next\": \"Done\"}, {\"Variable\": \"$.InputData.vRun\", \"NumericEquals\": 0, \"Next\": \"SNSFail\"}, {\"Variable\": \"$.InputData.vRun\", \"StringEquals\": \"NOTOK\", \"Next\": \"CRtrainingJob\"}]}, \"CRtrainingJob\": {\"Type\": \"Task\", \"Resource\": \"arn:aws:states:::glue:startJobRun.sync\", \"Parameters\": {\"JobName\": \"aimltoy-devCRFE_Jobs_step_03_tj\", \"Arguments.$\": \"$.CreditRiskFE.Arguments\"}, \"ResultPath\": \"$.CreditRiskFE.output\", \"Catch\": [{\"ErrorEquals\": [\"States.ALL\"], \"ResultPath\": \"$.Error\", \"Next\": \"SNSFail\"}], \"Next\": \"Done\"}, \"SNSFail\": {\"Type\": \"Task\", \"Resource\": \"arn:aws:states:::sns:publish\", \"InputPath\": \"$\", \"Parameters\": {\"TopicArn\": \"arn:aws:sns:us-east-1:849495627007:aiml_segments_notification\", \"Subject\": \"Error: Abandoned Coupon\", \"Message\": \"Error: TEST\"}, \"Next\": \"Fail\"}, \"Fail\": {\"Type\": \"Fail\"}, \"Done\": {\"Type\": \"Succeed\"}}}",
+                "stateMachineName": "aimltoy-devCRFE_StateMachine_",
+                "stateMachineType": "STANDARD"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-stepfunctions.CfnStateMachine",
+              "version": "1.101.0"
+            }
+          },
+          "aimltoy-devCRFE_Lambda_lambda_routing_role": {
+            "id": "aimltoy-devCRFE_Lambda_lambda_routing_role",
+            "path": "aimltoy-devCRFE/aimltoy-devCRFE_Lambda_lambda_routing_role",
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.Resource",
+              "version": "1.101.0"
+            }
+          },
+          "aimltoy-devCRFE_Lambda_lambda_routing": {
+            "id": "aimltoy-devCRFE_Lambda_lambda_routing",
+            "path": "aimltoy-devCRFE/aimltoy-devCRFE_Lambda_lambda_routing",
+            "children": {
+              "Code": {
+                "id": "Code",
+                "path": "aimltoy-devCRFE/aimltoy-devCRFE_Lambda_lambda_routing/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "aimltoy-devCRFE/aimltoy-devCRFE_Lambda_lambda_routing/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/core.AssetStaging",
+                      "version": "1.101.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "aimltoy-devCRFE/aimltoy-devCRFE_Lambda_lambda_routing/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/core.Resource",
+                      "version": "1.101.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-s3-assets.Asset",
+                  "version": "1.101.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "aimltoy-devCRFE/aimltoy-devCRFE_Lambda_lambda_routing/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Ref": "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6S3Bucket949DFB79"
+                      },
+                      "s3Key": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            {
+                              "Fn::Select": [
+                                0,
+                                {
+                                  "Fn::Split": [
+                                    "||",
+                                    {
+                                      "Ref": "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6S3VersionKeyEFB94312"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "Fn::Select": [
+                                1,
+                                {
+                                  "Fn::Split": [
+                                    "||",
+                                    {
+                                      "Ref": "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6S3VersionKeyEFB94312"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      }
+                    },
+                    "role": "arn:aws:iam::849495627007:role/iam_lambda_aiml_role",
+                    "environment": {
+                      "variables": {
+                        "KMS_KEY_ID": "36f1041a-656a-4df4-954a-49b6a39e4b54",
+                        "STATE_MACHINE": {
+                          "Fn::GetAtt": [
+                            "aimltoydevCRFEStateMachine",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    },
+                    "functionName": "aimltoy-devCRFE_Lambda_lambda_routing",
+                    "handler": "lambda_function.handler",
+                    "memorySize": 128,
+                    "runtime": "python3.8",
+                    "timeout": 600
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-lambda.CfnFunction",
+                  "version": "1.101.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-lambda.Function",
+              "version": "1.101.0"
+            }
+          },
+          "AssetParameters": {
+            "id": "AssetParameters",
+            "path": "aimltoy-devCRFE/AssetParameters",
+            "children": {
+              "a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6": {
+                "id": "a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6",
+                "path": "aimltoy-devCRFE/AssetParameters/a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6",
+                "children": {
+                  "S3Bucket": {
+                    "id": "S3Bucket",
+                    "path": "aimltoy-devCRFE/AssetParameters/a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6/S3Bucket",
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/core.CfnParameter",
+                      "version": "1.101.0"
+                    }
+                  },
+                  "S3VersionKey": {
+                    "id": "S3VersionKey",
+                    "path": "aimltoy-devCRFE/AssetParameters/a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6/S3VersionKey",
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/core.CfnParameter",
+                      "version": "1.101.0"
+                    }
+                  },
+                  "ArtifactHash": {
+                    "id": "ArtifactHash",
+                    "path": "aimltoy-devCRFE/AssetParameters/a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6/ArtifactHash",
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/core.CfnParameter",
+                      "version": "1.101.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.Construct",
+                  "version": "1.101.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.Construct",
+              "version": "1.101.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "aimltoy-devCRFE/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "aimltoy-devCRFE/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnResource",
+                  "version": "1.101.0"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "aimltoy-devCRFE/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnCondition",
+                  "version": "1.101.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.Construct",
+              "version": "1.101.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Stack",
+          "version": "1.101.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "@aws-cdk/core.App",
+      "version": "1.101.0"
+    }
+  }
+}

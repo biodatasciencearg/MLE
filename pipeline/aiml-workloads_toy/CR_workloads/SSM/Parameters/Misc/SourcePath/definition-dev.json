@@ -1,0 +1,5 @@
+{
+    "description" : "path s3 donde guardare el csv",
+    "value": "s3://arcosmtk-working-directory/credits_scoring_test/dataset_credit_risk.csv.gz",
+    "type": "String"
+}

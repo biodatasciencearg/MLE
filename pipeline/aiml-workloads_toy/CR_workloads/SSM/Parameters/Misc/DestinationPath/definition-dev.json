@@ -1,0 +1,5 @@
+{
+    "description" : "path s3 de parque donde guardo los resultdos",
+    "value": "s3://arcosmtk-working-directory/credits_scoring_test/offline_serving/",
+    "type": "String"
+}

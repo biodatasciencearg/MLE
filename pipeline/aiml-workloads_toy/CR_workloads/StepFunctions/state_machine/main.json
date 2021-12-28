@@ -1,0 +1,81 @@
+{
+  "Comment": "Step Functions to trigger FE workflow",
+  "StartAt": "CreditRiskFE",
+  "States": {
+    "CreditRiskFE": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "aimltoy-devCRFE_Jobs_step_01_fe",
+        "Arguments.$": "$.CreditRiskFE.Arguments"
+      },
+      "ResultPath": "$.CreditRiskFE.output",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.Error",
+          "Next": "SNSFail"
+        }
+      ],
+      "Next": "Backtesting"
+    },
+    "Backtesting": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.InputData.vRun",
+          "StringEquals": "OK",
+          "Next": "Done"
+        },
+        {
+          "Variable": "$.InputData.vRun",
+          "NumericEquals": 0,
+          "Next": "SNSFail"
+        },
+        {
+          "Variable": "$.InputData.vRun",
+          "StringEquals": "NOTOK",
+          "Next": "CRtrainingJob"
+        }
+      ]
+    },
+    "CRtrainingJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "aimltoy-devCRFE_Jobs_step_03_tj",
+        "Arguments.$": "$.CreditRiskFE.Arguments"
+      },
+      "ResultPath": "$.CreditRiskFE.output",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.Error",
+          "Next": "SNSFail"
+        }
+      ],
+      "Next": "Done"
+    },
+    "SNSFail": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "InputPath": "$",
+      "Parameters": {
+        "TopicArn": "%(sns_arn)s",
+        "Subject": "Error: Abandoned Coupon",
+        "Message": "Error: TEST"
+      },
+      "Next": "Fail"
+    },
+    "Fail": {
+      "Type": "Fail"
+    },
+    "Done": {
+      "Type": "Succeed"
+    }
+  }
+}

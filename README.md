@@ -8,9 +8,9 @@ Brief challenge to measure API and pipeline deployment as a Machine Learning Eng
 
 
 * The functional / technical specifications of the document ("./challenge/Machine_Learning_Engineer_Technical_Challenge_Kueski.docx") were followed for the implementation of the API.
-      
-        
-        
+
+
+
 ### Feature engineering Pipeline.
 #### 4.1. Understand the features (notebook 1)
 The Data Scientist (DS) create 5 feature derived from original data as:
@@ -48,14 +48,37 @@ Opportunities for improvement found in notebook 2:
 * Don't Include client Id during training. Also could be problematic because you don't need to feed the algorithm with ids (information leakage) Because random forest could find the right partition over the id space and as result improve artificially the metrics
 
 
-On the other hand 
+As a results I builded a stack to be deployed with cdk that include a state machine triggered by a cron.
+The repository you can find in "pipeline/aiml-workloads_toy/". Each Folder controls services as Glue, State machine, lambdas through json file in each environment. The proposed state machine is depicted as follows:
 
+
+
+
+
+<div><img src="./img/state_machine.png" width="400px" align="right"></div>
+<br>
+<br><br><br><br>
+
+**"CreditRiskFE"** reference to a ETL glue job (./pipeline/aiml-workloads_toy/CR_workloads/Glue/Jobs/step_01_fe) wroted in pyspark derived from notebook1 (jupyter notebook version on notebooks/01.Features_engineering.ipynb)
+
+
+**"Backtesting"** right now is just a scaffold to in a future write a function that evaluates the performance of the current model and derivated metrics as auc, recall, f1, precision, etc. But in the credit risk score, I suggest KS (Kolmogorov-Smirnov) score and performance tables partitioned by deciles.
+
+
+**"CRTrainingJob"** Right now Also is empty, but you can take the workflow on notebooks/02.Model_training.ipynb and adapt the pipeline to a pyspark script or develop a sagemaker processing job and do the transformation using a batch transform. The Goal of that training job is to make a new model,  triggered by a poor performance over the last records (denoting degradation of models). In the SSM parameters folder I setup a variable "DaysOW" to define observation and collect period (Figure below)
+
+
+<br>
+<br><br>
+<div><img src="./img/ow.jpg" width="400px" align="left"></div>
+<br>
+<br><br><br><br>
 
 ### API Dev
 Among the functional requirements is the creation/development of two APIs.
 * (1) creating an API to serve  features for each client
 * (2) creating a prediction service that uses the created features.
- 
+
 The Dockerfile is available to buil a container with all requirements.
 If you run locally without a docker container you must to define enviroment variables (linux):
 #### path to the last model. In production you could have multiple models in s3 and point to active model.
@@ -65,7 +88,7 @@ export KUESKI_FEATURE_STORE_API_URL="http://localhost:8000"
 #### path to feature store "online". In a real world scenario the query will be through a sql connector.
 export KUESKI_FEATURE_STORE_PATH="sqlite:///feature_store_online.db"
 
- 
+
 Documentation is available at local host on **http://127.0.0.1:8000/docs**.
 
 <div><img src="./img/documentation.png" width="500px" align="left"></div>
@@ -107,7 +130,9 @@ The important aspects to pointing out could be:
 ## Final remarks:
 
 
-
 In a real-world scenario ( and with a considerable more amount of time) the deployment for APIs alternate (volume dependency) between fastAPI with lambda functions behind an api gateway with load balancers (scalable solutions) or an EC2 with a docker image of the APIs the actual technical specification includes just the development of a local API
 
-For the feature engineering process. We will choose between SQL and NoSQL databases to create the feature store. Also, I will create a backtesting step to control the degradation of the models with an SNS step when the models drop from pre-established thresholds. Also, work about the standardization of sklearn transformers and/or include Pandera with Fouge in the pyspark preprocessing steps.
+For the feature engineering process. We will choose between SQL and NoSQL databases to create the feature store. Also, I will create a backtesting step to control the degradation of the models with an SNS step when the models drop from pre-established thresholds. Also, work about the standardization of sklearn transformers and/or include Pandera with Fouge in the pyspark preprocessing steps. The QA over features needs a to be improved and make better handling during first step of feature enginnering process. I'd like to be more time to developed the re-train process (**"CRTrainingJob"** Figure state machine) just I could only develop  the notebooks with transformers. 
+
+
+**IMPORTANT** repository implementation (pipeline / aiml-workloads_toy) is only possible if you have all configuration in aws (glue, lambda, step functions policy, permissions, etc.). In my account, I implemented all artifacts/resources. I am sending you only for a demonstration purpose that I have been capable of. To finish I need to develop the final step of a CI/CD, using cdk pipeline to define account (prod/dev) unitary test, etc.

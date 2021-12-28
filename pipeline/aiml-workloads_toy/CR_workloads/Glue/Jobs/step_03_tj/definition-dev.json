@@ -1,0 +1,8 @@
+{
+    "property_name": "pythonshell",
+    "property_python_version": "3",
+    "max_capacity": 1,
+    "max_concurrent_runs": 25,
+    "max_retries": 0,
+    "timeout": 2880
+}

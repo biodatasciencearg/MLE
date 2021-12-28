@@ -1,0 +1,311 @@
+{
+  "version": "9.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "aimltoy-devCRFE": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "aimltoy-devCRFE.template.json"
+      },
+      "metadata": {
+        "/aimltoy-devCRFE": [
+          {
+            "type": "aws:cdk:asset",
+            "data": {
+              "path": "asset.a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6",
+              "id": "a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6",
+              "packaging": "zip",
+              "sourceHash": "a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6",
+              "s3BucketParameter": "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6S3Bucket949DFB79",
+              "s3KeyParameter": "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6S3VersionKeyEFB94312",
+              "artifactHashParameter": "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6ArtifactHash9C8370EF"
+            },
+            "trace": [
+              "ConstructNode.addMetadata (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/construct-compat.js:405:62)",
+              "LegacyStackSynthesizer.doAddFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack-synthesizers/legacy.js:175:29)",
+              "LegacyStackSynthesizer.addFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack-synthesizers/legacy.js:83:25)",
+              "Stack.addFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack.js:410:33)",
+              "LegacyStackSynthesizer.addFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack-synthesizers/legacy.js:87:31)",
+              "new Asset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/aws-s3-assets/lib/asset.js:40:44)",
+              "AssetCode.bind (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/aws-lambda/lib/code.js:258:26)",
+              "new Function (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/aws-lambda/lib/function.js:97:33)",
+              "obj._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8154:58)",
+              "Kernel._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8582:24)",
+              "Kernel._create (/tmp/tmpkincqz__/lib/program.js:8154:34)",
+              "Kernel.create (/tmp/tmpkincqz__/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/tmp/tmpkincqz__/lib/program.js:9479:36)",
+              "KernelHost.run (/tmp/tmpkincqz__/lib/program.js:9442:22)",
+              "Immediate.setImmediate [as _onImmediate] (/tmp/tmpkincqz__/lib/program.js:9443:46)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/aimltoy-devCRFE/--AIMLtoy--Workloads--Misc--DaysOW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AIMLtoyWorkloadsMiscDaysOW",
+            "trace": [
+              "obj._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8154:58)",
+              "Kernel._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8582:24)",
+              "Kernel._create (/tmp/tmpkincqz__/lib/program.js:8154:34)",
+              "Kernel.create (/tmp/tmpkincqz__/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/tmp/tmpkincqz__/lib/program.js:9479:36)",
+              "KernelHost.run (/tmp/tmpkincqz__/lib/program.js:9442:22)",
+              "Immediate.setImmediate [as _onImmediate] (/tmp/tmpkincqz__/lib/program.js:9443:46)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/aimltoy-devCRFE/--AIMLtoy--Workloads--Misc--DestinationPath": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AIMLtoyWorkloadsMiscDestinationPath",
+            "trace": [
+              "obj._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8154:58)",
+              "Kernel._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8582:24)",
+              "Kernel._create (/tmp/tmpkincqz__/lib/program.js:8154:34)",
+              "Kernel.create (/tmp/tmpkincqz__/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/tmp/tmpkincqz__/lib/program.js:9479:36)",
+              "KernelHost.run (/tmp/tmpkincqz__/lib/program.js:9442:22)",
+              "Immediate.setImmediate [as _onImmediate] (/tmp/tmpkincqz__/lib/program.js:9443:46)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/aimltoy-devCRFE/--AIMLtoy--Workloads--Misc--SourcePath": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AIMLtoyWorkloadsMiscSourcePath",
+            "trace": [
+              "obj._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8154:58)",
+              "Kernel._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8582:24)",
+              "Kernel._create (/tmp/tmpkincqz__/lib/program.js:8154:34)",
+              "Kernel.create (/tmp/tmpkincqz__/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/tmp/tmpkincqz__/lib/program.js:9479:36)",
+              "KernelHost.run (/tmp/tmpkincqz__/lib/program.js:9442:22)",
+              "Immediate.setImmediate [as _onImmediate] (/tmp/tmpkincqz__/lib/program.js:9443:46)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/aimltoy-devCRFE/aimltoy-devCRFE_Jobs_step_01_fe": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "aimltoydevCRFEJobsstep01fe",
+            "trace": [
+              "obj._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8154:58)",
+              "Kernel._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8582:24)",
+              "Kernel._create (/tmp/tmpkincqz__/lib/program.js:8154:34)",
+              "Kernel.create (/tmp/tmpkincqz__/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/tmp/tmpkincqz__/lib/program.js:9479:36)",
+              "KernelHost.run (/tmp/tmpkincqz__/lib/program.js:9442:22)",
+              "Immediate.setImmediate [as _onImmediate] (/tmp/tmpkincqz__/lib/program.js:9443:46)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/aimltoy-devCRFE/aimltoy-devCRFE_Jobs_step_03_tj": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "aimltoydevCRFEJobsstep03tj",
+            "trace": [
+              "obj._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8154:58)",
+              "Kernel._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8582:24)",
+              "Kernel._create (/tmp/tmpkincqz__/lib/program.js:8154:34)",
+              "Kernel.create (/tmp/tmpkincqz__/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/tmp/tmpkincqz__/lib/program.js:9479:36)",
+              "KernelHost.run (/tmp/tmpkincqz__/lib/program.js:9442:22)",
+              "Immediate.setImmediate [as _onImmediate] (/tmp/tmpkincqz__/lib/program.js:9443:46)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/aimltoy-devCRFE/aimltoy-devCRFE_StateMachine_": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "aimltoydevCRFEStateMachine",
+            "trace": [
+              "obj._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8154:58)",
+              "Kernel._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8582:24)",
+              "Kernel._create (/tmp/tmpkincqz__/lib/program.js:8154:34)",
+              "Kernel.create (/tmp/tmpkincqz__/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/tmp/tmpkincqz__/lib/program.js:9479:36)",
+              "KernelHost.run (/tmp/tmpkincqz__/lib/program.js:9442:22)",
+              "Immediate.setImmediate [as _onImmediate] (/tmp/tmpkincqz__/lib/program.js:9443:46)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/aimltoy-devCRFE/aimltoy-devCRFE_Lambda_lambda_routing/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "aimltoydevCRFELambdalambdarouting74A9569F",
+            "trace": [
+              "new Function (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/aws-lambda/lib/function.js:135:26)",
+              "obj._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8154:58)",
+              "Kernel._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8582:24)",
+              "Kernel._create (/tmp/tmpkincqz__/lib/program.js:8154:34)",
+              "Kernel.create (/tmp/tmpkincqz__/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/tmp/tmpkincqz__/lib/program.js:9479:36)",
+              "KernelHost.run (/tmp/tmpkincqz__/lib/program.js:9442:22)",
+              "Immediate.setImmediate [as _onImmediate] (/tmp/tmpkincqz__/lib/program.js:9443:46)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/aimltoy-devCRFE/AssetParameters/a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6/S3Bucket": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6S3Bucket949DFB79",
+            "trace": [
+              "new FileAssetParameters (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/asset-parameters.js:12:36)",
+              "LegacyStackSynthesizer.doAddFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack-synthesizers/legacy.js:162:22)",
+              "LegacyStackSynthesizer.addFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack-synthesizers/legacy.js:83:25)",
+              "Stack.addFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack.js:410:33)",
+              "LegacyStackSynthesizer.addFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack-synthesizers/legacy.js:87:31)",
+              "new Asset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/aws-s3-assets/lib/asset.js:40:44)",
+              "AssetCode.bind (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/aws-lambda/lib/code.js:258:26)",
+              "new Function (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/aws-lambda/lib/function.js:97:33)",
+              "obj._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8154:58)",
+              "Kernel._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8582:24)",
+              "Kernel._create (/tmp/tmpkincqz__/lib/program.js:8154:34)",
+              "Kernel.create (/tmp/tmpkincqz__/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/tmp/tmpkincqz__/lib/program.js:9479:36)",
+              "KernelHost.run (/tmp/tmpkincqz__/lib/program.js:9442:22)",
+              "Immediate.setImmediate [as _onImmediate] (/tmp/tmpkincqz__/lib/program.js:9443:46)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/aimltoy-devCRFE/AssetParameters/a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6/S3VersionKey": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6S3VersionKeyEFB94312",
+            "trace": [
+              "new FileAssetParameters (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/asset-parameters.js:16:35)",
+              "LegacyStackSynthesizer.doAddFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack-synthesizers/legacy.js:162:22)",
+              "LegacyStackSynthesizer.addFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack-synthesizers/legacy.js:83:25)",
+              "Stack.addFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack.js:410:33)",
+              "LegacyStackSynthesizer.addFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack-synthesizers/legacy.js:87:31)",
+              "new Asset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/aws-s3-assets/lib/asset.js:40:44)",
+              "AssetCode.bind (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/aws-lambda/lib/code.js:258:26)",
+              "new Function (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/aws-lambda/lib/function.js:97:33)",
+              "obj._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8154:58)",
+              "Kernel._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8582:24)",
+              "Kernel._create (/tmp/tmpkincqz__/lib/program.js:8154:34)",
+              "Kernel.create (/tmp/tmpkincqz__/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/tmp/tmpkincqz__/lib/program.js:9479:36)",
+              "KernelHost.run (/tmp/tmpkincqz__/lib/program.js:9442:22)",
+              "Immediate.setImmediate [as _onImmediate] (/tmp/tmpkincqz__/lib/program.js:9443:46)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/aimltoy-devCRFE/AssetParameters/a4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6/ArtifactHash": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssetParametersa4fecb91a380623265e05dab5054006f8d5f1d033176dd7acb31c3bb712a49c6ArtifactHash9C8370EF",
+            "trace": [
+              "new FileAssetParameters (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/asset-parameters.js:20:38)",
+              "LegacyStackSynthesizer.doAddFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack-synthesizers/legacy.js:162:22)",
+              "LegacyStackSynthesizer.addFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack-synthesizers/legacy.js:83:25)",
+              "Stack.addFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack.js:410:33)",
+              "LegacyStackSynthesizer.addFileAsset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stack-synthesizers/legacy.js:87:31)",
+              "new Asset (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/aws-s3-assets/lib/asset.js:40:44)",
+              "AssetCode.bind (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/aws-lambda/lib/code.js:258:26)",
+              "new Function (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/aws-lambda/lib/function.js:97:33)",
+              "obj._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8154:58)",
+              "Kernel._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8582:24)",
+              "Kernel._create (/tmp/tmpkincqz__/lib/program.js:8154:34)",
+              "Kernel.create (/tmp/tmpkincqz__/lib/program.js:7895:29)",
+              "KernelHost.processRequest (/tmp/tmpkincqz__/lib/program.js:9479:36)",
+              "KernelHost.run (/tmp/tmpkincqz__/lib/program.js:9442:22)",
+              "Immediate.setImmediate [as _onImmediate] (/tmp/tmpkincqz__/lib/program.js:9443:46)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/aimltoy-devCRFE/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata",
+            "trace": [
+              "new MetadataResource (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/metadata-resource.js:22:30)",
+              "construct (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/synthesis.js:128:9)",
+              "visit (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/synthesis.js:184:9)",
+              "visit (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/synthesis.js:181:9)",
+              "injectMetadataResources (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/synthesis.js:117:5)",
+              "Object.synthesize (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/synthesis.js:17:5)",
+              "App.synth (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stage.js:100:41)",
+              "_wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:7970:134)",
+              "Kernel._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8582:24)",
+              "ret._ensureSync (/tmp/tmpkincqz__/lib/program.js:7970:107)",
+              "Kernel._ensureSync (/tmp/tmpkincqz__/lib/program.js:8563:28)",
+              "Kernel.invoke (/tmp/tmpkincqz__/lib/program.js:7970:34)",
+              "KernelHost.processRequest (/tmp/tmpkincqz__/lib/program.js:9479:36)",
+              "KernelHost.run (/tmp/tmpkincqz__/lib/program.js:9442:22)",
+              "Immediate.setImmediate [as _onImmediate] (/tmp/tmpkincqz__/lib/program.js:9443:46)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ],
+        "/aimltoy-devCRFE/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable",
+            "trace": [
+              "new MetadataResource (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/metadata-resource.js:30:35)",
+              "construct (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/synthesis.js:128:9)",
+              "visit (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/synthesis.js:184:9)",
+              "visit (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/synthesis.js:181:9)",
+              "injectMetadataResources (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/synthesis.js:117:5)",
+              "Object.synthesize (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/private/synthesis.js:17:5)",
+              "App.synth (/tmp/jsii-kernel-JNkGEu/node_modules/@aws-cdk/core/lib/stage.js:100:41)",
+              "_wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:7970:134)",
+              "Kernel._wrapSandboxCode (/tmp/tmpkincqz__/lib/program.js:8582:24)",
+              "ret._ensureSync (/tmp/tmpkincqz__/lib/program.js:7970:107)",
+              "Kernel._ensureSync (/tmp/tmpkincqz__/lib/program.js:8563:28)",
+              "Kernel.invoke (/tmp/tmpkincqz__/lib/program.js:7970:34)",
+              "KernelHost.processRequest (/tmp/tmpkincqz__/lib/program.js:9479:36)",
+              "KernelHost.run (/tmp/tmpkincqz__/lib/program.js:9442:22)",
+              "Immediate.setImmediate [as _onImmediate] (/tmp/tmpkincqz__/lib/program.js:9443:46)",
+              "runCallback (timers.js:705:18)",
+              "tryOnImmediate (timers.js:676:5)",
+              "processImmediate (timers.js:658:5)"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

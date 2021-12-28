@@ -1,0 +1,5 @@
+{
+    "property_python_version": "python3.8",
+    "memory_size":128,
+    "timeout":600
+}

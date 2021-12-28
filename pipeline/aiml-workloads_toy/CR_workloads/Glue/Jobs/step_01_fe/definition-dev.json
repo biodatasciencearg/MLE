@@ -1,0 +1,11 @@
+{
+    "property_name": "glueetl",
+    "property_python_version": "3",
+    "worker_type": "G.2X",
+    "number_of_workers": 5,
+    "max_concurrent_runs": 25,
+    "glue_version": "2.0",
+    "max_retries": 0,
+    "timeout": 2880,
+    "default_arguments": "{'--additional-python-modules': 'dateutil==2.8.1'}"
+}

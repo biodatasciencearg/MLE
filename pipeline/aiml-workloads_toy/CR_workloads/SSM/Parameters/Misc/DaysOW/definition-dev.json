@@ -1,0 +1,5 @@
+{
+    "description" : "numero de dias que desde el processing job se setea como la ventana de observacion",
+    "value": "365",
+    "type": "String"
+}
