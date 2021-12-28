@@ -61,9 +61,9 @@ If you run locally without a docker container you must to define enviroment vari
 #### path to the last model. In production you could have multiple models in s3 and point to active model.
 export KUESKI_MODEL_PATH="./model_risk.joblib"
 ##### url to api to get the features. In a real world you point to a aws endpoint.
-KUESKI_FEATURE_STORE_API_URL="http://localhost:8000"
+export KUESKI_FEATURE_STORE_API_URL="http://localhost:8000"
 #### path to feature store "online". In a real world scenario the query will be through a sql connector.
-KUESKI_FEATURE_STORE_PATH="sqlite:///feature_store_online.db"
+export KUESKI_FEATURE_STORE_PATH="sqlite:///feature_store_online.db"
 
  
 Documentation is available at local host on **http://127.0.0.1:8000/docs**.
