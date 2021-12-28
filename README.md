@@ -100,7 +100,7 @@ You can test directly on docs web page:
 
 The important aspects to pointing out could be:
 
-* QA over each characteristic building a pydantic model to be sure about the data type and the imputation of each variable.
+* QA over each characteristic building a pandera model to be sure about the data type and the imputation of each variable. In fact, I return an field with all columns with qa problems ("qa_failure_cases") and also print by console to be capture by for example "CloudWatch logs".
 
 
 
