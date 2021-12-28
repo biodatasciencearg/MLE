@@ -41,7 +41,7 @@ Opportunities for improvement found in notebook 2:
 
 * Imputation methods and vectorization (discussed on 4.1)
 
-* SMOTE before train / test split. This is incorrect because SMOTE tries to "balance" the original distribution with the idea of "show" to the model more instances for the minority class. So, I propose changing the order before train / test split. Also, this schema could affect the informed metrics.
+* SMOTE before train / test split. This is incorrect because SMOTE tries to "balance" the original distribution with the idea of "show" to the model more instances for the minority class. So, I propose changing the order after train / test split. Also, this schema could affect the informed metrics.
 
 * Training set. During notebook2 I thought that the best choice would be eliminate all the pseudoreplicates. In the current implementation feeds the model with all rows and you need to keep just the last subset of variables for each client.
 
